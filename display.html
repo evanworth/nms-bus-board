@@ -60,8 +60,24 @@
   } else {
     banner.classList.add("hidden");
   }
-}); 
   });
+    function scheduleDailyReset() {
+  const now = new Date();
+  const reset = new Date();
+  reset.setHours(15, 0, 0, 0); // 3:00 PM
+
+  if (now > reset) {
+    reset.setDate(reset.getDate() + 1);
+  }
+
+  setTimeout(() => {
+    buses.forEach(bus => set(ref(db, `buses/${bus}`), "waiting"));
+    set(ref(db, "finalCall"), false);
+    scheduleDailyReset();
+  }, reset - now);
+}
+
+scheduleDailyReset();
 </script>
 </body>
 </html>
