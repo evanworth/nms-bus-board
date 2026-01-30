@@ -14,6 +14,42 @@
 
   <div class="container" id="busBoard"></div>
 
-  <script src="script.js"></script>
+ <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDk5Z5_j63txDSGDqVwXiCc0Jd24LIsHlY",
+    authDomain: "nms-bus-board.firebaseapp.com",
+    databaseURL: "https://nms-bus-board-default-rtdb.firebaseio.com",
+    projectId: "nms-bus-board",
+    storageBucket: "nms-bus-board.firebasestorage.app",
+    messagingSenderId: "845407369789",
+    appId: "1:845407369789:web:e4ec3aa1fbcf65b49cc854"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const busRef = ref(db, "buses");
+
+  const buses = Array.from({ length: 11 }, (_, i) => `Bus ${i + 1}`);
+  const board = document.getElementById("busBoard");
+
+  buses.forEach(bus => {
+    const tile = document.createElement("div");
+    tile.id = bus;
+    tile.className = "bus waiting";
+    tile.innerText = bus.toUpperCase();
+    board.appendChild(tile);
+  });
+
+  onValue(busRef, snapshot => {
+    const data = snapshot.val() || {};
+    buses.forEach(bus => {
+      document.getElementById(bus).className =
+        `bus ${data[bus] || "waiting"}`;
+    });
+  });
+</script>
 </body>
 </html>
