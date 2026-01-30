@@ -34,6 +34,7 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
   const busRef = ref(db, "buses");
+  const finalCallRef = ref(db, "finalCall");
 
   const buses = Array.from({ length: 11 }, (_, i) => `Bus ${i + 1}`);
   const board = document.getElementById("busBoard");
@@ -52,6 +53,14 @@
       document.getElementById(bus).className =
         `bus ${data[bus] || "waiting"}`;
     });
+   onValue(finalCallRef, snapshot => {
+  const banner = document.getElementById("finalCall");
+  if (snapshot.val() === true) {
+    banner.classList.remove("hidden");
+  } else {
+    banner.classList.add("hidden");
+  }
+}); 
   });
 </script>
 </body>
