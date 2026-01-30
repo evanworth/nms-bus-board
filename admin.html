@@ -15,6 +15,60 @@
   <div class="admin-buttons" id="controls"></div>
   <button class="clear" onclick="clearAll()">Clear All</button>
 
-  <script src="script.js"></script>
+ <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDk5Z5_j63txDSGDqVwXiCc0Jd24LIsHlY",
+    authDomain: "nms-bus-board.firebaseapp.com",
+    databaseURL: "https://nms-bus-board-default-rtdb.firebaseio.com",
+    projectId: "nms-bus-board",
+    storageBucket: "nms-bus-board.firebasestorage.app",
+    messagingSenderId: "845407369789",
+    appId: "1:845407369789:web:e4ec3aa1fbcf65b49cc854"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const busRef = ref(db, "buses");
+
+  const buses = Array.from({ length: 11 }, (_, i) => `Bus ${i + 1}`);
+  const states = {};
+  const controls = document.getElementById("controls");
+
+  buses.forEach(bus => {
+    states[bus] = "waiting";
+    const btn = document.createElement("button");
+    btn.innerText = bus;
+    btn.onclick = () => toggleBus(bus);
+    controls.appendChild(btn);
+  });
+
+  function toggleBus(bus) {
+    const next =
+      states[bus] === "waiting" ? "calling" :
+      states[bus] === "calling" ? "called" :
+      "waiting";
+
+    set(ref(db, `buses/${bus}`), next);
+  }
+
+  function clearAll() {
+    buses.forEach(bus => {
+      set(ref(db, `buses/${bus}`), "waiting");
+    });
+  }
+
+  onValue(busRef, snapshot => {
+    const data = snapshot.val() || {};
+    buses.forEach((bus, i) => {
+      states[bus] = data[bus] || "waiting";
+      controls.children[i].className = states[bus];
+    });
+  });
+
+  window.clearAll = clearAll;
+</script>
 </body>
 </html>
