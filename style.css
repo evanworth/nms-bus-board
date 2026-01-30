@@ -50,12 +50,21 @@ header img {
   padding: 20px;
 }
 
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+  padding: 20px;
+}
+
 button {
-  padding: 12px;
-  font-size: 1rem;
-  border-radius: 8px;
+  padding: 28px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  border-radius: 24px;
   border: none;
-  cursor: pointer;
+  color: white;
+  min-height: 90px;
 }
 
 .clear {
