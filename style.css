@@ -75,3 +75,11 @@ button {
 .hidden {
   display: none;
 }
+.final-btn {
+  background: #facc15;
+  color: #000;
+  font-size: 1.6rem;
+  padding: 22px;
+  margin: 10px 20px;
+  border-radius: 20px;
+}
